@@ -100,7 +100,7 @@ public class MainGameLoop {
 		// Gui models
 			
 			List<GuiTexture> guis = new ArrayList<GuiTexture>();
-			GuiTexture gui = new GuiTexture(loader.loadTexture("textures/health"), new Vector2f(-0.755f, -0.90f), new Vector2f(0.25f, 0.25f));
+			GuiTexture gui = new GuiTexture(loader.loadTexture("textures/health"), new Vector2f(-0.745f, 0.94f), new Vector2f(0.25f, 0.25f));
 			//GuiTexture gui = new GuiTexture(loader.loadTexture("textures/health"), new Vector2f(-0.755f, -0.90f), new Vector2f(0.25f, 0.25f));
 			guis.add(gui);
 			
