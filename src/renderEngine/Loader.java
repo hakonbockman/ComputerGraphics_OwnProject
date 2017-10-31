@@ -76,15 +76,15 @@ public class Loader {
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
-			
 		}
+		
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
 	}
+	
 	
 	/**
 	 * Deletes vertexArrays, when we are done with it. Don't want to keep VAO's and VBO's in memory accidently.

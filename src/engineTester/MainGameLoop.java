@@ -36,79 +36,74 @@ public class MainGameLoop {
 		Random random = new Random();
 		MasterRenderer renderer = new MasterRenderer();
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
-	// Light
-		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(1, 1, 1));
-		List<Light> lights = new ArrayList<Light>();
-		lights.add(light);
-		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
-		lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(10, 0, 0)));
-	// Light end	
-	// Player
-		TexturedModel personModel = loadTexturedModel("models/person", "textures/playerTexture", 1, loader);		
-		Player player = new Player(personModel, new Vector3f( 100f, 0.0f, -50f), 0f, 0f, 0f, 1.0f);
-		Camera camera = new Camera(player);
-	// Player end	
 		
+		List<Entity> entities = new ArrayList<Entity>();
+		List<Light> lights = new ArrayList<Light>();
+		List<Terrain> terrains = new ArrayList<Terrain>();
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();		
+	
+		// the sun
+		lights.add(new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.001f, 0.001f, 0.001f)));
+	
+	// Player
+		TexturedModel personModel = loadTexturedModel("models/person/person", "models/person/playerTexture", 1, loader);		
+		Player player = new Player(personModel, new Vector3f( 100f, 0.0f, -50f), 0f, 0f, 0f, 1.0f);
+	// Player end
+	// Camera	
+		Camera camera = new Camera(player);
+	// Camera end	
 	// Terrain
+		//textures to paint the terrain with
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("textures/terrain/grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("textures/terrain/mud"));
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("textures/terrain/path"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("textures/terrain/pinkFlowers"));
-		
+		// creating the package of textures
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, bTexture, gTexture);
+		// getting the design, pattern of how we are painting the terrain.
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/terrain/blendMap"));
-		
-		
-		
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap,"textures/terrain/heightmap");
-		Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap,"textures/terrain/heightmap");
-		Terrain terrain3 = new Terrain(-1, 0, loader, texturePack, blendMap,"textures/terrain/heightmap");
-		Terrain terrain4 = new Terrain(0, 0, loader, texturePack, blendMap,"textures/terrain/heightmap");
-		
-		List<Terrain> terrains = new ArrayList<Terrain>();
-		terrains.add(terrain);
-		terrains.add(terrain2);
-		terrains.add(terrain3);
-		terrains.add(terrain4);
-		
+		// Create 4 different terrains, although same heightMap, texturePack and blendMap.
+		terrains.add(new Terrain(0, -1, loader, texturePack, blendMap,"textures/terrain/heightmap"));
+		terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap,"textures/terrain/heightmap"));
+		terrains.add(new Terrain(-1, 0, loader, texturePack, blendMap,"textures/terrain/heightmap"));
+		terrains.add(new Terrain(0, 0, loader, texturePack, blendMap,"textures/terrain/heightmap"));
 	// Terrain end	
-		
 	// Models
 		// Environment Models
-			TexturedModel tree = loadTexturedModel("models/tree", "textures/tree", 1, loader);
-			TexturedModel blueDevil = loadTexturedModel("models/blueDevil/bluedevil", "models/blueDevil/bluedevil", 1, loader);
-			TexturedModel tree2 = loadTexturedModel("models/lowPolyTree", "textures/lowPolyTree", 1, loader);
+			TexturedModel tree = loadTexturedModel("models/pine", "textures/pine", 1, loader);
 			TexturedModel fern = loadTexturedModel("models/fern", "textures/fern_atlas_texture", 2, loader);
 			fern.getTexture().setHasTransparency(true);		
 			TexturedModel grass = loadTexturedModel("models/grassModel", "textures/diffuse", 3, loader);
 			grass.getTexture().setHasTransparency(true);		
 			TexturedModel flower = loadTexturedModel("models/grassModel", "textures/flower", 1, loader);
 			flower.getTexture().setHasTransparency(true);
-		
-			List<Entity> entities = new ArrayList<Entity>();
-			
+			TexturedModel lamp = loadTexturedModel("models/lamp/lamp", "models/lamp/lamp", 1, loader);
+			//TODO: have to use the check system from CollisionMultipleTerrains. but the "check-system" has to be a own method, so it can be used multiple places.
 			for(int i = 0; i < 100; i++) {
 				float x;
 				float z = random.nextFloat() * ( -800);
-				entities.add(new Entity(tree,  new Vector3f(x = random.nextFloat() * 800, terrain.getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 7.0f));
-				entities.add(new Entity(tree2, new Vector3f(x = random.nextFloat() * 800, terrain.getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.0f));
-				entities.add(new Entity(grass, random.nextInt(6), new Vector3f(x = random.nextFloat() * 800, terrain.getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.5f));
-				entities.add(new Entity(flower, new Vector3f(x = random.nextFloat() * 800, terrain.getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.5f));
-				entities.add(new Entity(fern, random.nextInt(4),  new Vector3f(x = random.nextFloat() * 800, terrain.getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.0f));
+				entities.add(new Entity(tree,  new Vector3f(x = random.nextFloat() * 800, terrains.get(0).getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 3.0f));
+				entities.add(new Entity(grass, random.nextInt(6), new Vector3f(x = random.nextFloat() * 800, terrains.get(0).getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.5f));
+				entities.add(new Entity(flower, new Vector3f(x = random.nextFloat() * 800, terrains.get(0).getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.5f));
+				entities.add(new Entity(fern, random.nextInt(4),  new Vector3f(x = random.nextFloat() * 800, terrains.get(0).getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.0f));
 				
-				if(i / 10 == 0 ) {
-					entities.add(new Entity(blueDevil, random.nextInt(4),  new Vector3f(x = random.nextFloat() * 800, terrain.getHeightOfTerrain(x, z), z), 0f, 0f, 0f, 1.0f));
-				}
 			}
 		// Environment Models end
-		// Gui models
+		// GUI 
+			// Health Bar
+			guis.add(new GuiTexture(loader.loadTexture("textures/health"), new Vector2f(-0.745f, 0.94f), new Vector2f(0.25f, 0.25f)));
+		// GUI end
 			
-			List<GuiTexture> guis = new ArrayList<GuiTexture>();
-			GuiTexture gui = new GuiTexture(loader.loadTexture("textures/health"), new Vector2f(-0.745f, 0.94f), new Vector2f(0.25f, 0.25f));
-			//GuiTexture gui = new GuiTexture(loader.loadTexture("textures/health"), new Vector2f(-0.755f, -0.90f), new Vector2f(0.25f, 0.25f));
-			guis.add(gui);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 10, 10, -250, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 120, 10, -275, "Green",0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 230, 10, -300, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 340, 10, -325, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 450, 10, -350, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 660, 10, -105, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 770, 10, -200, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 80, 10, -425, "Green", 0);
+			modelWithLight(entities, lights, lamp, 1, terrains.get(0), 750, 10, -350, "Green", 0);
 			
-		// Gui models end
 	// Models end
 		
 	// MainLoop
@@ -135,7 +130,27 @@ public class MainGameLoop {
 		DisplayManager.closeDisplay();
 	}
 	
-
+	private static void modelWithLight(List<Entity> entities, List<Light> lights, TexturedModel model, int modelSize,
+			Terrain currentTerrain, float xLocation, float yLocation, float zLocation, String colour, int colourStrength) {
+		int rgb_RED = 0;
+		int rgb_GREEN = 0;
+		int rgb_BLUE = 0;
+		if(colour == "Red") {
+			rgb_RED = 2; 
+			rgb_RED += colourStrength;
+		}else if(colour == "Green") {
+			rgb_GREEN = 2;
+			rgb_GREEN += colourStrength;
+		}else if(colour == "Blue") {
+			rgb_BLUE = 2;
+			rgb_BLUE += colourStrength;
+		}
+		
+		lights.add(new Light(new Vector3f(xLocation, yLocation, zLocation), new Vector3f(rgb_RED, rgb_GREEN, rgb_BLUE),new Vector3f(1.0f, 0.01f, 0.002f)));
+		
+		entities.add(new Entity(model, new Vector3f(xLocation, currentTerrain.getHeightOfTerrain(xLocation, zLocation), zLocation), 0f, 0f, 0f, modelSize));
+		
+	}
 	
 	private static void renderEntities(MasterRenderer renderer, List<Entity> entities) {
 		for(Entity entity: entities) {

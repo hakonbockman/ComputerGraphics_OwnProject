@@ -96,6 +96,7 @@ public class OBJLoader {
 		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
 		
 	}
+
 	private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures,
 	List<Vector3f> normals, float[] textureArray, float[] normalsArray) {
 		int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
@@ -108,6 +109,5 @@ public class OBJLoader {
 		normalsArray[currentVertexPointer * 3 + 1] = currentNorm.y;
 		normalsArray[currentVertexPointer * 3 + 2] = currentNorm.z;
 	}
-		
 	
 }

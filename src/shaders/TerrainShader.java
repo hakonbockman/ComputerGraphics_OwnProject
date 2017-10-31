@@ -11,7 +11,7 @@ import toolbox.Maths;
 
 public class TerrainShader extends shaderProgram{
 	
-	private static final int MAX_LIGHTS = 4;
+	private static final int MAX_LIGHTS = 10;
 	
 	private static final String VERTEX_FILE = "src/shaders/TerrainVertexShader.txt";
 	private static final String FRAGMENT_FILE = "src/shaders/TerrainFragmentShader.txt";
@@ -21,6 +21,7 @@ public class TerrainShader extends shaderProgram{
 	private int location_viewMatrix;
 	private int location_lightPosition[];
 	private int location_lightColour[];
+	private int location_attenuation[];
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skycolour;
@@ -59,9 +60,11 @@ public class TerrainShader extends shaderProgram{
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int [MAX_LIGHTS];
-		for(int i = 0; i < 4; i++) {
+		location_attenuation = new int [MAX_LIGHTS];
+		for(int i = 0; i < 10; i++) {
 			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
+			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 	}
 	
@@ -87,13 +90,15 @@ public class TerrainShader extends shaderProgram{
 	}
 	
 	public void loadLights(List<Light> lights) {
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < 10; i++) {
 			if(i < lights.size()) {
 				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
 				super.loadVector(location_lightColour[i], lights.get(i).getColour());
+				super.loadVector(location_attenuation[i], lights.get(i).getAttentuation());
 			}else {
 				super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
 				super.loadVector(location_lightColour[i],  new Vector3f(0, 0, 0));
+				super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
 			}
 		}
 	}
