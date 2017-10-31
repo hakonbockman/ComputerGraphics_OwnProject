@@ -37,7 +37,11 @@ public class MainGameLoop {
 		MasterRenderer renderer = new MasterRenderer();
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 	// Light
-		Light light = new Light(new Vector3f(3000, 2000, 500), new Vector3f(1, 1, 1));
+		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(1, 1, 1));
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(light);
+		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
+		lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(10, 0, 0)));
 	// Light end	
 	// Player
 		TexturedModel personModel = loadTexturedModel("models/person", "textures/playerTexture", 1, loader);		
@@ -116,7 +120,7 @@ public class MainGameLoop {
 			renderTerrain(renderer, terrains);
 			renderEntities(renderer, entities);
 			
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
 			guiRenderer.render(guis);
 			
 			DisplayManager.updateDisplay();
